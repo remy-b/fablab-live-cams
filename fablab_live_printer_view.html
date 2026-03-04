@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Live Printer Feeds - USYD Rocketry Team</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    /* Global Styles */
+    * {
+      box-sizing: border-box;
+    }
+    
+    body {
+      background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+      color: #ffffff;
+      font-family: 'Roboto', sans-serif;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    header {
+      background: linear-gradient(135deg, #E64626 0%, #c93818 100%);
+      padding: 30px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      box-shadow: 0 4px 20px rgba(230, 70, 38, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%);
+      transform: translateX(-100%);
+      opacity: 0;
+    }
+    
+    header::before.shimmer-active {
+      animation: shimmer 0.8s ease-out;
+    }
+    
+    @keyframes shimmer {
+      0% { 
+        transform: translateX(-100%);
+        opacity: 1;
+      }
+      100% { 
+        transform: translateX(100%);
+        opacity: 1;
+      }
+    }
+    
+    header img {
+      height: 70px;
+      width: auto;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+      z-index: 1;
+      transition: transform 0.3s ease;
+      padding:7px;
+      background: rgba(255, 255, 255, 0.1);
+    }
+    
+    header img:hover {
+      transform: scale(1.05);
+    }
+    
+    header h1 {
+      margin: 0;
+      font-size: 2.5em;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      z-index: 1;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+      font-weight: 500;
+    }
+    
+    .feed-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      max-width: 1400px;
+      margin: 0 auto;
+      gap: 25px;
+      padding: 40px 20px;
+      flex: 1;
+    }
+    
+    .feed-wrapper {
+      background: linear-gradient(145deg, #2a2a2a, #1f1f1f);
+      border: 1px solid rgba(230, 70, 38, 0.2);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+      display: flex;
+      flex-direction: column;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+    
+    .feed-wrapper:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 32px rgba(230, 70, 38, 0.3), 0 0 0 2px rgba(230, 70, 38, 0.4);
+      border-color: rgba(230, 70, 38, 0.6);
+    }
+    
+    .feed-wrapper::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #E64626, #ff6b4a, #E64626);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    .feed-wrapper:hover::before {
+      opacity: 1;
+    }
+    
+    .feed-label {
+      background: linear-gradient(135deg, #E64626 0%, #d63818 100%);
+      padding: 14px;
+      font-size: 1.1em;
+      text-align: center;
+      font-weight: 500;
+      color: #ffffff;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      position: relative;
+    }
+    
+    .feed-label::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 2px;
+      background: rgba(255,255,255,0.8);
+      transition: width 0.3s ease;
+    }
+    
+    .feed-wrapper:hover .feed-label::after {
+      width: 80%;
+    }
+    
+    .feed-wrapper img {
+      width: 100%;
+      height: auto;
+      display: block;
+      background: #1a1a1a;
+      min-height: 240px;
+      object-fit: cover;
+    }
+    
+    .feed-image-container {
+      position: relative;
+      overflow: hidden;
+      background: #1a1a1a;
+    }
+    
+    .feed-image-container::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.3) 100%);
+      pointer-events: none;
+    }
+    
+    .feed-image-container::before {
+      content: '🔍 Click to enlarge';
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(230, 70, 38, 0.95);
+      color: white;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 0.85em;
+      font-weight: 500;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+      z-index: 10;
+      white-space: nowrap;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    }
+    
+    .feed-wrapper:hover .feed-image-container::before {
+      opacity: 1;
+    }
+    
+    footer {
+      background: linear-gradient(135deg, #141414, #1a1a1a);
+      text-align: center;
+      padding: 20px;
+      font-size: 0.9em;
+      border-top: 1px solid rgba(230, 70, 38, 0.2);
+      box-shadow: 0 -4px 20px rgba(0,0,0,0.3);
+    }
+    
+    footer p {
+      margin: 0;
+      color: #b0b0b0;
+    }
+    
+    /* Settings Panel */
+    .settings-toggle {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: linear-gradient(135deg, #E64626 0%, #d63818 100%);
+      color: white;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(230, 70, 38, 0.4);
+      font-size: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      z-index: 900;
+    }
+    
+    .settings-toggle:hover {
+      transform: scale(1.1) rotate(90deg);
+      box-shadow: 0 6px 24px rgba(230, 70, 38, 0.6);
+    }
+    
+    .settings-panel {
+      position: fixed;
+      bottom: 100px;
+      right: 30px;
+      background: linear-gradient(145deg, #2a2a2a, #1f1f1f);
+      border: 2px solid rgba(230, 70, 38, 0.6);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8);
+      z-index: 900;
+      min-width: 280px;
+      transform: translateY(20px);
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.3s ease;
+    }
+    
+    .settings-panel.active {
+      transform: translateY(0);
+      opacity: 1;
+      pointer-events: all;
+    }
+    
+    .settings-panel h3 {
+      margin: 0 0 15px 0;
+      font-size: 1.2em;
+      color: #E64626;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      border-bottom: 2px solid rgba(230, 70, 38, 0.3);
+      padding-bottom: 8px;
+    }
+    
+    .setting-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+      padding: 10px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      transition: background 0.3s ease;
+    }
+    
+    .setting-item:hover {
+      background: rgba(230, 70, 38, 0.1);
+    }
+    
+    .setting-item label {
+      font-size: 0.95em;
+      cursor: pointer;
+      flex: 1;
+    }
+    
+    .setting-item input[type="number"] {
+      width: 70px;
+      padding: 5px 8px;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(230, 70, 38, 0.4);
+      border-radius: 6px;
+      color: white;
+      font-size: 0.9em;
+    }
+    
+    .setting-item input[type="number"]:focus {
+      outline: none;
+      border-color: #E64626;
+    }
+    
+    /* Toggle Switch */
+    .toggle-switch {
+      position: relative;
+      width: 50px;
+      height: 26px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 13px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    
+    .toggle-switch.active {
+      background: #E64626;
+    }
+    
+    .toggle-switch::after {
+      content: '';
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 20px;
+      height: 20px;
+      background: white;
+      border-radius: 50%;
+      transition: transform 0.3s ease;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+    
+    .toggle-switch.active::after {
+      transform: translateX(24px);
+    }
+    
+    .setting-note {
+      font-size: 0.8em;
+      color: #999;
+      margin-top: 5px;
+      font-style: italic;
+    }
+    
+    /* Modal Styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.95);
+      backdrop-filter: blur(10px);
+      animation: fadeIn 0.3s ease;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    .modal.active {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .modal-content {
+      position: relative;
+      max-width: 90%;
+      max-height: 90vh;
+      background: linear-gradient(145deg, #2a2a2a, #1f1f1f);
+      border-radius: 16px;
+      border: 2px solid rgba(230, 70, 38, 0.6);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(230, 70, 38, 0.3);
+      overflow: hidden;
+      animation: zoomIn 0.3s ease;
+    }
+    
+    @keyframes zoomIn {
+      from {
+        transform: scale(0.8);
+        opacity: 0;
+      }
+      to {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+    
+    .modal-header {
+      background: linear-gradient(135deg, #E64626 0%, #d63818 100%);
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .modal-title {
+      font-size: 1.3em;
+      font-weight: 500;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin: 0;
+    }
+    
+    .modal-close {
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      color: #ffffff;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      line-height: 1;
+      padding: 0;
+    }
+    
+    .modal-close:hover {
+      background: rgba(255, 255, 255, 0.2);
+      border-color: rgba(255, 255, 255, 0.6);
+      transform: rotate(90deg);
+    }
+    
+    .modal-body {
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #1a1a1a;
+    }
+    
+    .modal-body img {
+      width: 100%;
+      height: auto;
+      max-height: calc(90vh - 70px);
+      display: block;
+      object-fit: contain;
+    }
+    
+    .feed-wrapper img {
+      cursor: pointer;
+      transition: opacity 0.3s ease;
+    }
+    
+    .feed-wrapper img:hover {
+      opacity: 0.85;
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      header h1 {
+        font-size: 1.8em;
+      }
+      
+      .feed-container {
+        grid-template-columns: 1fr;
+        padding: 20px 10px;
+      }
+      
+      .modal-content {
+        max-width: 95%;
+        max-height: 95vh;
+      }
+      
+      .modal-title {
+        font-size: 1.1em;
+      }
+      
+      .modal-close {
+        width: 35px;
+        height: 35px;
+        font-size: 24px;
+      }
+      
+      .settings-toggle {
+        bottom: 20px;
+        right: 20px;
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+      }
+      
+      .settings-panel {
+        bottom: 85px;
+        right: 20px;
+        left: 20px;
+        min-width: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <!-- Replace the URL below with your actual team logo URL -->
+    <img src="https://i.postimg.cc/65XXtBX8/URT-All-Charcoal.png" alt="USYD Rocketry Team Logo">
+    <h1>Live Printer Feeds</h1>
+  </header>
+  <div class="feed-container">
+    <div class="feed-wrapper">
+      <div class="feed-label">GARRY</div>
+      <div class="feed-image-container">
+        <img id="printer1" class="feed" src="https://fablab.ammelabs.org/machine/webcam/octo-garry.fablab/" alt="GARRY">
+      </div>
+    </div>
+    <div class="feed-wrapper">
+      <div class="feed-label">GROMIT</div>
+      <div class="feed-image-container">
+        <img id="printer2" class="feed" src="https://fablab.ammelabs.org/machine/webcam/octo-gromit.fablab/" alt="GROMIT">
+      </div>
+    </div>
+    <div class="feed-wrapper">
+      <div class="feed-label">HEPHAESTUS</div>
+      <div class="feed-image-container">
+        <img id="printer3" class="feed" src="https://fablab.ammelabs.org/machine/webcam/octo-hephaestus.fablab/" alt="HEPHAESTUS">
+      </div>
+    </div>
+    <div class="feed-wrapper">
+      <div class="feed-label">KOOKABURRA</div>
+      <div class="feed-image-container">
+        <img id="printer4" class="feed" src="https://fablab.ammelabs.org/machine/webcam/octo-kookaburra.fablab/" alt="KOOKABURRA">
+      </div>
+    </div>
+    <div class="feed-wrapper">
+      <div class="feed-label">LORIKEET</div>
+      <div class="feed-image-container">
+        <img id="printer5" class="feed" src="https://fablab.ammelabs.org/machine/webcam/octo-lorikeet.fablab/" alt="LORIKEET">
+      </div>
+    </div>
+    <div class="feed-wrapper">
+      <div class="feed-label">PINGU</div>
+      <div class="feed-image-container">
+        <img id="printer6" class="feed" src="https://fablab.ammelabs.org/machine/webcam/octo-pingu.fablab/" alt="PINGU">
+      </div>
+    </div>
+    <div class="feed-wrapper">
+      <div class="feed-label">SNOOPY</div>
+      <div class="feed-image-container">
+        <img id="printer7" class="feed" src="https://fablab.ammelabs.org/machine/webcam/octo-snoopy.fablab/" alt="SNOOPY">
+      </div>
+    </div>
+  </div>
+  
+  <!-- Modal for enlarged view -->
+  <div id="imageModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="modalTitle" class="modal-title"></h2>
+        <button class="modal-close" onclick="closeModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <img id="modalImage" src="" alt="Enlarged view">
+      </div>
+    </div>
+  </div>
+  
+  <footer>
+    <p>Created by Remy Barberet</p>
+  </footer>
+  
+  <!-- Settings Panel -->
+  <button class="settings-toggle" onclick="toggleSettings()" aria-label="Settings">
+    ⚙️
+  </button>
+  <div id="settingsPanel" class="settings-panel">
+    <h3>⚡ Settings</h3>
+    <div class="setting-item">
+      <label for="shimmerToggle">Header Shimmer on Refresh</label>
+      <div class="toggle-switch" id="shimmerToggle" onclick="toggleShimmer()"></div>
+    </div>
+    <div class="setting-item">
+      <label for="refreshInterval">Refresh Interval (sec)</label>
+      <input type="number" id="refreshInterval" min="1" max="60" value="3" onchange="updateRefreshInterval()">
+    </div>
+    <div class="setting-note">💡 Shimmer effects trigger when feeds refresh</div>
+  </div>
+  
+  <script>
+    // Settings management
+    let refreshIntervalId;
+    let settings = {
+      shimmerEnabled: true,
+      refreshInterval: 3
+    };
+    
+    // Load settings from localStorage
+    function loadSettings() {
+      const saved = localStorage.getItem('printerDashboardSettings');
+      if (saved) {
+        settings = JSON.parse(saved);
+      }
+      // Apply loaded settings to UI
+      document.getElementById('shimmerToggle').classList.toggle('active', settings.shimmerEnabled);
+      document.getElementById('refreshInterval').value = settings.refreshInterval;
+    }
+    
+    // Save settings to localStorage
+    function saveSettings() {
+      localStorage.setItem('printerDashboardSettings', JSON.stringify(settings));
+    }
+    
+    // Toggle shimmer effect
+    function toggleShimmer() {
+      settings.shimmerEnabled = !settings.shimmerEnabled;
+      document.getElementById('shimmerToggle').classList.toggle('active', settings.shimmerEnabled);
+      saveSettings();
+    }
+    
+    // Update refresh interval
+    function updateRefreshInterval() {
+      const value = parseInt(document.getElementById('refreshInterval').value);
+      if (value >= 1 && value <= 60) {
+        settings.refreshInterval = value;
+        saveSettings();
+        // Restart the interval
+        clearInterval(refreshIntervalId);
+        startRefreshInterval();
+      }
+    }
+    
+    // Toggle settings panel
+    function toggleSettings() {
+      document.getElementById('settingsPanel').classList.toggle('active');
+    }
+    
+    // Close settings when clicking outside
+    document.addEventListener('click', function(e) {
+      const panel = document.getElementById('settingsPanel');
+      const toggle = document.querySelector('.settings-toggle');
+      if (!panel.contains(e.target) && !toggle.contains(e.target)) {
+        panel.classList.remove('active');
+      }
+    });
+    
+    // Trigger header shimmer animation
+    function triggerShimmer() {
+      if (!settings.shimmerEnabled) return;
+      
+      const shimmer = document.querySelector('header::before');
+      const header = document.querySelector('header');
+      
+      // Create a temporary style element to trigger the animation
+      const styleSheet = document.createElement('style');
+      styleSheet.textContent = `
+        @keyframes shimmerTrigger {
+          0% { 
+            transform: translateX(-100%);
+            opacity: 1;
+          }
+          100% { 
+            transform: translateX(100%);
+            opacity: 1;
+          }
+        }
+        header::before {
+          animation: shimmerTrigger 0.8s ease-out !important;
+        }
+      `;
+      document.head.appendChild(styleSheet);
+      
+      // Remove the style after animation completes
+      setTimeout(() => {
+        document.head.removeChild(styleSheet);
+      }, 800);
+    }
+    
+    // Refresh all feeds
+    function refreshFeeds() {
+      triggerShimmer();
+      
+      for (let i = 1; i <= 8; i++) {
+        const img = document.getElementById("printer" + i);
+        if (img) {
+          // Force refresh by adding timestamp
+          const currentSrc = img.src.split('?')[0];
+          img.src = currentSrc + '?t=' + new Date().getTime();
+        }
+      }
+    }
+    
+    // Start the refresh interval
+    function startRefreshInterval() {
+      refreshIntervalId = setInterval(refreshFeeds, settings.refreshInterval * 1000);
+    }
+    
+    // Initialize on page load
+    loadSettings();
+    startRefreshInterval();
+    
+    // Modal functionality
+    const modal = document.getElementById('imageModal');
+    const modalImage = document.getElementById('modalImage');
+    const modalTitle = document.getElementById('modalTitle');
+    
+    // Add click event to all feed images
+    document.querySelectorAll('.feed').forEach(img => {
+      img.addEventListener('click', function() {
+        openModal(this.src, this.alt);
+      });
+    });
+    
+    function openModal(src, title) {
+      // Set the current image immediately (shows the thumbnail)
+      modalImage.src = src;
+      modalTitle.textContent = title;
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden'; // Prevent scrolling when modal is open
+      
+      // Then immediately fetch a fresh version with a new timestamp
+      const baseSrc = src.split('?')[0];
+      modalImage.src = baseSrc + '?t=' + new Date().getTime();
+    }
+    
+    function closeModal() {
+      modal.classList.remove('active');
+      document.body.style.overflow = 'auto'; // Restore scrolling
+    }
+    
+    // Close modal when clicking outside the content
+    modal.addEventListener('click', function(e) {
+      if (e.target === modal) {
+        closeModal();
+      }
+    });
+    
+    // Close modal with Escape key
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && modal.classList.contains('active')) {
+        closeModal();
+      }
+    });
+  </script>
+</body>
+</html>
