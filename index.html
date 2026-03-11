@@ -19,6 +19,7 @@
       min-height: 100vh;
       display: flex;
       flex-direction: column;
+      overflow-x: hidden;
     }
     
     header {
@@ -87,12 +88,13 @@
     
     .feed-container {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr));
       max-width: 1400px;
       margin: 0 auto;
       gap: 25px;
       padding: 40px 20px;
       flex: 1;
+      width: 100%;
     }
     
     .feed-wrapper {
@@ -105,6 +107,7 @@
       flex-direction: column;
       transition: all 0.3s ease;
       position: relative;
+      max-width: 100%;
     }
     
     .feed-wrapper:hover {
@@ -477,13 +480,41 @@
     
     /* Responsive adjustments */
     @media (max-width: 768px) {
+      header {
+        padding: 20px 15px;
+        gap: 15px;
+      }
+      
+      header img {
+        height: 50px;
+        padding: 5px;
+      }
+      
       header h1 {
-        font-size: 1.8em;
+        font-size: 1.5em;
+        letter-spacing: 1px;
       }
       
       .feed-container {
         grid-template-columns: 1fr;
-        padding: 20px 10px;
+        padding: 20px 15px;
+        gap: 20px;
+        max-width: 100%;
+      }
+      
+      .feed-wrapper {
+        max-width: 100%;
+        margin: 0 auto;
+      }
+      
+      .feed-label {
+        font-size: 1em;
+        padding: 12px;
+        letter-spacing: 1px;
+      }
+      
+      .feed-wrapper img {
+        min-height: 200px;
       }
       
       .modal-content {
@@ -511,9 +542,32 @@
       
       .settings-panel {
         bottom: 85px;
-        right: 20px;
-        left: 20px;
+        right: 15px;
+        left: 15px;
         min-width: auto;
+        max-width: calc(100vw - 30px);
+      }
+      
+      footer {
+        padding: 15px;
+        font-size: 0.85em;
+      }
+    }
+    
+    /* Extra small devices */
+    @media (max-width: 480px) {
+      header h1 {
+        font-size: 1.3em;
+      }
+      
+      .feed-container {
+        padding: 15px 10px;
+        gap: 15px;
+      }
+      
+      .feed-image-container::before {
+        font-size: 0.8em;
+        padding: 6px 12px;
       }
     }
   </style>
