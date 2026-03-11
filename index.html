@@ -185,7 +185,7 @@
     }
     
     .feed-image-container::before {
-      content: '🔍 Click to enlarge';
+      content: 'Click to enlarge';
       position: absolute;
       bottom: 10px;
       left: 50%;
@@ -206,97 +206,6 @@
     
     .feed-wrapper:hover .feed-image-container::before {
       opacity: 1;
-    }
-    
-    .feed-error {
-      display: none;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      text-align: center;
-      z-index: 5;
-      background: rgba(0, 0, 0, 0.8);
-      padding: 20px;
-      border-radius: 12px;
-      border: 2px solid rgba(230, 70, 38, 0.4);
-    }
-    
-    .feed-error-icon {
-      font-size: 3em;
-      margin-bottom: 10px;
-    }
-    
-    .feed-error-text {
-      font-size: 0.9em;
-      color: #ccc;
-    }
-    
-    .feed-image-container.error .feed-error {
-      display: block;
-    }
-    
-    .feed-image-container.error img {
-      opacity: 0.2;
-    }
-    
-    /* Network Warning Banner */
-    .network-warning {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      background: linear-gradient(135deg, #E64626 0%, #c93818 100%);
-      color: white;
-      padding: 15px 20px;
-      text-align: center;
-      z-index: 1001;
-      box-shadow: 0 4px 20px rgba(230, 70, 38, 0.5);
-      animation: slideDown 0.5s ease;
-    }
-    
-    @keyframes slideDown {
-      from {
-        transform: translateY(-100%);
-      }
-      to {
-        transform: translateY(0);
-      }
-    }
-    
-    .network-warning.active {
-      display: block;
-    }
-    
-    .network-warning-icon {
-      font-size: 1.5em;
-      margin-right: 10px;
-    }
-    
-    .network-warning strong {
-      font-weight: 600;
-    }
-    
-    .network-warning-close {
-      position: absolute;
-      right: 20px;
-      top: 50%;
-      transform: translateY(-50%);
-      background: rgba(255, 255, 255, 0.2);
-      border: none;
-      color: white;
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
-      cursor: pointer;
-      font-size: 18px;
-      line-height: 1;
-      transition: background 0.3s ease;
-    }
-    
-    .network-warning-close:hover {
-      background: rgba(255, 255, 255, 0.3);
     }
     
     footer {
@@ -337,6 +246,11 @@
     .settings-toggle:hover {
       transform: scale(1.1) rotate(90deg);
       box-shadow: 0 6px 24px rgba(230, 70, 38, 0.6);
+    }
+    
+    .settings-toggle::before {
+      content: '\2699';
+      font-size: 28px;
     }
     
     .settings-panel {
@@ -605,87 +519,51 @@
   </style>
 </head>
 <body>
-  <!-- Network Warning Banner -->
-  <div id="networkWarning" class="network-warning">
-    <span class="network-warning-icon">⚠️</span>
-    <strong>Connection Issue:</strong> Unable to load camera feeds. Please ensure you're connected to the university network or VPN.
-    <button class="network-warning-close" onclick="closeNetworkWarning()">&times;</button>
-  </div>
-  
   <header>
-    <!-- Replace the URL below with your actual team logo URL -->
     <img src="https://i.postimg.cc/65XXtBX8/URT-All-Charcoal.png" alt="USYD Rocketry Team Logo">
     <h1>Live Printer Feeds</h1>
   </header>
   <div class="feed-container">
     <div class="feed-wrapper">
       <div class="feed-label">GARRY</div>
-      <div class="feed-image-container" id="container1">
-        <img id="printer1" class="feed" src="https://fablab.ammelabs.org/machine/webcam/octo-garry.fablab/" alt="GARRY">
-        <div class="feed-error">
-          <div class="feed-error-icon">🔧</div>
-          <div class="feed-error-text">Under Maintenance<br>or Offline</div>
-        </div>
+      <div class="feed-image-container">
+        <img id="printer1" class="feed" src="https://fablab.englabs.sydney.edu.au/machine/webcam/octo-garry.fablab/" alt="GARRY" referrerpolicy="no-referrer">
       </div>
     </div>
     <div class="feed-wrapper">
       <div class="feed-label">GROMIT</div>
-      <div class="feed-image-container" id="container2">
-        <img id="printer2" class="feed" src="https://fablab.ammelabs.org/machine/webcam/octo-gromit.fablab/" alt="GROMIT">
-        <div class="feed-error">
-          <div class="feed-error-icon">🔧</div>
-          <div class="feed-error-text">Under Maintenance<br>or Offline</div>
-        </div>
+      <div class="feed-image-container">
+        <img id="printer2" class="feed" src="https://fablab.englabs.sydney.edu.au/machine/webcam/octo-gromit.fablab/" alt="GROMIT" referrerpolicy="no-referrer">
       </div>
     </div>
     <div class="feed-wrapper">
       <div class="feed-label">HEPHAESTUS</div>
-      <div class="feed-image-container" id="container3">
-        <img id="printer3" class="feed" src="https://fablab.ammelabs.org/machine/webcam/octo-hephaestus.fablab/" alt="HEPHAESTUS">
-        <div class="feed-error">
-          <div class="feed-error-icon">🔧</div>
-          <div class="feed-error-text">Under Maintenance<br>or Offline</div>
-        </div>
+      <div class="feed-image-container">
+        <img id="printer3" class="feed" src="https://fablab.englabs.sydney.edu.au/machine/webcam/octo-hephaestus.fablab/" alt="HEPHAESTUS" referrerpolicy="no-referrer">
       </div>
     </div>
     <div class="feed-wrapper">
       <div class="feed-label">KOOKABURRA</div>
-      <div class="feed-image-container" id="container4">
-        <img id="printer4" class="feed" src="https://fablab.ammelabs.org/machine/webcam/octo-kookaburra.fablab/" alt="KOOKABURRA">
-        <div class="feed-error">
-          <div class="feed-error-icon">🔧</div>
-          <div class="feed-error-text">Under Maintenance<br>or Offline</div>
-        </div>
+      <div class="feed-image-container">
+        <img id="printer4" class="feed" src="https://fablab.englabs.sydney.edu.au/machine/webcam/octo-kookaburra.fablab/" alt="KOOKABURRA" referrerpolicy="no-referrer">
       </div>
     </div>
     <div class="feed-wrapper">
       <div class="feed-label">LORIKEET</div>
-      <div class="feed-image-container" id="container5">
-        <img id="printer5" class="feed" src="https://fablab.ammelabs.org/machine/webcam/octo-lorikeet.fablab/" alt="LORIKEET">
-        <div class="feed-error">
-          <div class="feed-error-icon">🔧</div>
-          <div class="feed-error-text">Under Maintenance<br>or Offline</div>
-        </div>
+      <div class="feed-image-container">
+        <img id="printer5" class="feed" src="https://fablab.englabs.sydney.edu.au/machine/webcam/octo-lorikeet.fablab/" alt="LORIKEET" referrerpolicy="no-referrer">
       </div>
     </div>
     <div class="feed-wrapper">
       <div class="feed-label">PINGU</div>
-      <div class="feed-image-container" id="container6">
-        <img id="printer6" class="feed" src="https://fablab.ammelabs.org/machine/webcam/octo-pingu.fablab/" alt="PINGU">
-        <div class="feed-error">
-          <div class="feed-error-icon">🔧</div>
-          <div class="feed-error-text">Under Maintenance<br>or Offline</div>
-        </div>
+      <div class="feed-image-container">
+        <img id="printer6" class="feed" src="https://fablab.englabs.sydney.edu.au/machine/webcam/octo-pingu.fablab/" alt="PINGU" referrerpolicy="no-referrer">
       </div>
     </div>
     <div class="feed-wrapper">
       <div class="feed-label">SNOOPY</div>
-      <div class="feed-image-container" id="container7">
-        <img id="printer7" class="feed" src="https://fablab.ammelabs.org/machine/webcam/octo-snoopy.fablab/" alt="SNOOPY">
-        <div class="feed-error">
-          <div class="feed-error-icon">🔧</div>
-          <div class="feed-error-text">Under Maintenance<br>or Offline</div>
-        </div>
+      <div class="feed-image-container">
+        <img id="printer7" class="feed" src="https://fablab.englabs.sydney.edu.au/machine/webcam/octo-snoopy.fablab/" alt="SNOOPY" referrerpolicy="no-referrer">
       </div>
     </div>
   </div>
@@ -708,11 +586,9 @@
   </footer>
   
   <!-- Settings Panel -->
-  <button class="settings-toggle" onclick="toggleSettings()" aria-label="Settings">
-    ⚙️
-  </button>
+  <button class="settings-toggle" onclick="toggleSettings()" aria-label="Settings"></button>
   <div id="settingsPanel" class="settings-panel">
-    <h3>⚡ Settings</h3>
+    <h3>Settings</h3>
     <div class="setting-item">
       <label for="shimmerToggle">Header Shimmer on Refresh</label>
       <div class="toggle-switch" id="shimmerToggle" onclick="toggleShimmer()"></div>
@@ -721,7 +597,7 @@
       <label for="refreshInterval">Refresh Interval (sec)</label>
       <input type="number" id="refreshInterval" min="1" max="60" value="3" onchange="updateRefreshInterval()">
     </div>
-    <div class="setting-note">💡 Shimmer effects trigger when feeds refresh</div>
+    <div class="setting-note">Shimmer effects trigger when feeds refresh</div>
   </div>
   
   <script>
@@ -731,114 +607,6 @@
       shimmerEnabled: true,
       refreshInterval: 3
     };
-    
-    // Error tracking
-    let failedFeeds = new Set();
-    let loadedFeeds = new Set();
-    const totalFeeds = 7;
-    let initialLoadComplete = false;
-    let feedFailureCount = {}; // Track consecutive failures
-    let feedLoadingTimers = {}; // Track loading timeouts
-    
-    // Close network warning
-    function closeNetworkWarning() {
-      document.getElementById('networkWarning').classList.remove('active');
-    }
-    
-    // Check if all feeds failed
-    function checkNetworkStatus() {
-      if (!initialLoadComplete) return;
-      
-      if (loadedFeeds.size === 0 && failedFeeds.size === totalFeeds) {
-        document.getElementById('networkWarning').classList.add('active');
-      }
-    }
-    
-    // Handle image load error
-    function handleImageError(printerId) {
-      // Increment failure count
-      feedFailureCount[printerId] = (feedFailureCount[printerId] || 0) + 1;
-      
-      // Only show error after 2 consecutive failures
-      if (feedFailureCount[printerId] >= 2) {
-        const containerId = 'container' + printerId;
-        const container = document.getElementById(containerId);
-        if (container) {
-          container.classList.add('error');
-          failedFeeds.add(printerId);
-          loadedFeeds.delete(printerId);
-          checkNetworkStatus();
-        }
-      }
-    }
-    
-    // Handle image load success
-    function handleImageLoad(printerId) {
-      // Reset failure count on successful load
-      feedFailureCount[printerId] = 0;
-      
-      const containerId = 'container' + printerId;
-      const container = document.getElementById(containerId);
-      if (container) {
-        container.classList.remove('error');
-        loadedFeeds.add(printerId);
-        failedFeeds.delete(printerId);
-      }
-      
-      // Close network warning if any feed loads successfully
-      if (loadedFeeds.size > 0) {
-        closeNetworkWarning();
-      }
-    }
-    
-    // Mark image as loading (clear error state temporarily)
-    function markImageLoading(printerId) {
-      const containerId = 'container' + printerId;
-      const container = document.getElementById(containerId);
-      if (container && feedFailureCount[printerId] < 2) {
-        // Don't clear error if it's been consistently failing
-        container.classList.remove('error');
-      }
-      
-      // Clear any existing timeout
-      if (feedLoadingTimers[printerId]) {
-        clearTimeout(feedLoadingTimers[printerId]);
-      }
-      
-      // Set a timeout to check if image loaded
-      feedLoadingTimers[printerId] = setTimeout(() => {
-        const img = document.getElementById('printer' + printerId);
-        if (img && !checkImageLoaded(img)) {
-          handleImageError(printerId);
-        }
-      }, 6000); // Give 6 seconds for image to load
-    }
-    
-    // Check if an image actually loaded
-    function checkImageLoaded(img) {
-      // Image is loaded if it has dimensions and is complete
-      return img.complete && img.naturalWidth > 0 && img.naturalHeight > 0;
-    }
-    
-    // Setup error handlers for all images
-    function setupErrorHandlers() {
-      for (let i = 1; i <= totalFeeds; i++) {
-        const img = document.getElementById('printer' + i);
-        if (img) {
-          img.onerror = () => handleImageError(i);
-          img.onload = () => handleImageLoad(i);
-          
-          // Mark initial images as loading
-          markImageLoading(i);
-        }
-      }
-      
-      // Mark initial load as complete after giving time for images to load
-      setTimeout(() => {
-        initialLoadComplete = true;
-        checkNetworkStatus();
-      }, 8000);
-    }
     
     // Load settings from localStorage
     function loadSettings() {
@@ -925,11 +693,9 @@
     function refreshFeeds() {
       triggerShimmer();
       
-      for (let i = 1; i <= totalFeeds; i++) {
+      for (let i = 1; i <= 8; i++) {
         const img = document.getElementById("printer" + i);
         if (img) {
-          // Mark as loading
-          markImageLoading(i);
           // Force refresh by adding timestamp
           const currentSrc = img.src.split('?')[0];
           img.src = currentSrc + '?t=' + new Date().getTime();
@@ -945,7 +711,6 @@
     // Initialize on page load
     loadSettings();
     startRefreshInterval();
-    setupErrorHandlers();
     
     // Modal functionality
     const modal = document.getElementById('imageModal');
